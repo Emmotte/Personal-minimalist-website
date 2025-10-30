@@ -1,0 +1,5 @@
+This project is a portfolio website for a photographer named Emmett Tupper.
+
+The brand is that of a create who specializes in media creation and technology. The brand identity is modern, minimalist, and sophisticated, with a strong emphasis on creative expression and high-quality presentation.
+
+The design direction is to create a black and white, minimalist experience that relies heavily on typography, particle effects, and complex text animations for its aesthetic. All content other than the text itself should be removed.
