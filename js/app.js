@@ -65,9 +65,8 @@ class PortfolioApp {
                 this.updateParticles(p, time);
                 
                 // Mouse interaction
-                if (p.mouseIsPressed) {
-                    this.createMouseParticles(p, p.mouseX, p.mouseY);
-                }
+                this.createMouseParticles(p, p.mouseX, p.mouseY, p.mouseIsPressed);
+
             };
 
             p.windowResized = () => {
@@ -111,9 +110,9 @@ class PortfolioApp {
             
             // Enhanced color animation
             const alpha = 255;
-            p.fill(0, alpha);
+            p.fill(255, alpha);
             p.strokeWeight(1);
-            p.stroke(0, alpha * 0.3);
+            p.stroke(255, alpha * 0.3);
             p.text(char, 0, 0);
             p.pop();
         }
@@ -121,7 +120,7 @@ class PortfolioApp {
         // Draw shadow text for depth
         p.push();
         p.translate(x + 4, y + 4);
-        p.fill(0, 50);
+        p.fill(255, 50);
         p.noStroke();
         p.text(text, 0, 0);
         p.pop();
@@ -142,16 +141,17 @@ class PortfolioApp {
             }
             
             p.push();
-            p.fill(0, particle.life * 100);
+            p.fill(255, particle.life * 100);
             p.noStroke();
             p.circle(particle.x, particle.y, particle.size);
             p.pop();
         }
     }
 
-    createMouseParticles(p, mx, my) {
+    createMouseParticles(p, mx, my, isPressed) {
         // Create particles at mouse position
-        for (let i = 0; i < 3; i++) {
+        let particleCount = isPressed ? 10 : 1;
+        for (let i = 0; i < particleCount; i++) {
             this.particles.push({
                 x: mx,
                 y: my,
@@ -431,7 +431,7 @@ class PortfolioApp {
             position: fixed;
             width: 4px;
             height: 4px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;

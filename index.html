@@ -3,347 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Photography & Creative Work</title>
+    <title>Emmett Tupper - Portfolio</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #000;
-            background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 50%, #ffffff 100%);
-            min-height: 100vh;
-            perspective: 1000px;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 120px 0 180px; /* Increased top and bottom padding */
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100px;
-            background: linear-gradient(180deg, #000 0%, transparent 100%);
-        }
-
-        #hero-typography {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            pointer-events: auto; /* Allow clicking */
-            transform: translateY(+50px); /* Move even higher to create more space */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        
-        .hero-content h1,
-        .hero-content p {
-            pointer-events: none; /* Keep text non-interactive */
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 2rem; /* Increased spacing */
-            transform-style: preserve-3d;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            opacity: 1; /* Make visible as fallback */
-            font-weight: 700;
-            color: #000;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 3rem; /* Increased from 2rem to 3rem */
-            transform-style: preserve-3d;
-            opacity: 0;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border: 2px solid #000;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            position: relative;
-            overflow: hidden;
-            margin: 0 auto; /* Center horizontally */
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .cta-button:hover {
-            background: #fff;
-            color: #000;
-            transform: translateY(-2px) translateZ(10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Portfolio Section */
-        .portfolio {
-            padding: 150px 0;
-            position: relative;
-        }
-
-        .portfolio h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .portfolio h2.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .portfolio-item {
-            border: 1px solid #000;
-            overflow: hidden;
-            transition: all 0.5s ease;
-            opacity: 0;
-            transform: translateY(30px) rotateX(0deg);
-            transform-style: preserve-3d;
-            cursor: pointer;
-        }
-
-        .portfolio-item.visible {
-            opacity: 1;
-            transform: translateY(0) rotateX(0deg);
-        }
-
-        .portfolio-item:hover {
-            transform: translateY(0px) rotateY(5deg) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .portfolio-image {
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .portfolio-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .portfolio-item:hover .portfolio-image img {
-            transform: scale(1.1) translateZ(20px);
-        }
-
-        .portfolio-info {
-            padding: 1.5rem;
-        }
-
-        .portfolio-info h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .portfolio-info p {
-            color: #666;
-        }
-
-        /* About Section */
-        .about {
-            padding: 150px 0;
-            position: relative;
-        }
-
-        .about h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .about h2.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .about-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .about-image img {
-            width: 250px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid #000;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 150px 0;
-            position: relative;
-        }
-
-        .contact h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .contact h2.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-content {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .contact-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .contact-info {
-            margin: 2rem 0;
-        }
-
-        .contact-item {
-            margin-bottom: 1rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        /* Footer */
-        footer {
-            background: transparent;
-            color: #000;
-            text-align: center;
-            padding: 100px 0 50px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        footer.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .about-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  
-
+    <div id="hero-typography"></div>
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div id="hero-typography"></div>
         <div class="container hero-content">
             <h1>Emmett Tupper</h1>
             <p class="hero-subtitle">Photography & Visual Storytelling</p>
@@ -351,113 +20,56 @@
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
+    <!-- Photography Section -->
+    <section id="photography" class="portfolio">
         <div class="container">
-            <h2>Portfolio</h2>
+            <h2><a href="photography/people.html">Photography</a></h2>
             <div class="portfolio-grid">
                 <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo1/400/300.jpg" alt="Photography work 1">
-                    </div>
                     <div class="portfolio-info">
-                        <h3>Urban Landscapes</h3>
-                        <p>City photography exploring modern architecture</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo2/400/300.jpg" alt="Photography work 2">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Portraits</h3>
+                        <h3><a href="photography/people.html">People</a></h3>
                         <p>Capturing human emotions and stories</p>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo3/400/300.jpg" alt="Photography work 3">
-                    </div>
                     <div class="portfolio-info">
-                        <h3>Nature Studies</h3>
-                        <p>Natural beauty in monochrome</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo4/400/300.jpg" alt="Photography work 4">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Street Life</h3>
-                        <p>Candid moments from everyday life</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo5/400/300.jpg" alt="Photography work 5">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Abstract Forms</h3>
-                        <p>Experimental photography and composition</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-image">
-                        <img src="https://picsum.photos/seed/photo6/400/300.jpg" alt="Photography work 6">
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Minimalism</h3>
-                        <p>Less is more in visual storytelling</p>
+                        <h3><a href="photography/spaces.html">Spaces</a></h3>
+                        <p>City photography exploring modern architecture</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
+    <!-- Video Section -->
+    <section id="video" class="portfolio">
         <div class="container">
-            <h2>About</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>I am a passionate photographer and visual artist dedicated to capturing the essence of moments through the lens. My work focuses on the interplay of light, shadow, and emotion, creating compelling narratives in monochrome.</p>
-                    <p>With years of experience in both commercial and artistic photography, I bring a unique perspective to every project.</p>
-                </div>
-                <div class="about-image">
-                    <img src="https://picsum.photos/seed/profile/300/300.jpg" alt="Profile">
+            <h2><a href="video/digital-junk-collective.html">Video</a></h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3><a href="video/digital-junk-collective.html">Digital Junk Collective</a></h3>
+                        <p>Description of video project 1.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <!-- Computer Science Section -->
+    <section id="computer-science" class="portfolio">
         <div class="container">
-            <h2>Contact</h2>
-            <div class="contact-content">
-                <p>Let's collaborate on your next creative project. I'd love to hear from you.</p>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <strong>Email:</strong> hello@portfolio.com
-                    </div>
-                    <div class="contact-item">
-                        <strong>Phone:</strong> +1 (555) 123-4567
-                    </div>
-                    <div class="contact-item">
-                        <strong>Location:</strong> New York, NY
+            <h2><a href="computer-science/servers.html">Computer Science</a></h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-info">
+                        <h3><a href="computer-science/servers.html">Servers</a></h3>
+                        <p>Description of server project 1.</p>
                     </div>
                 </div>
-                <a href="mailto:hello@portfolio.com" class="cta-button">Get in Touch</a>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>© 2024 Portfolio. All rights reserved.</p>
-        </div>
-    </footer>
 
     <script src="js/app.js"></script>
 </body>
