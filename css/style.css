@@ -14,6 +14,15 @@ body {
     overflow-x: hidden;
 }
 
+#hero-typography {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -41,15 +50,6 @@ body {
     width: 2px;
     height: 100px;
     background: linear-gradient(180deg, #fff 0%, transparent 100%);
-}
-
-#hero-typography {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
 }
 
 .hero-content {
@@ -119,7 +119,7 @@ body {
     background: #000;
     color: #fff;
     transform: translateY(-2px) translateZ(10px);
-    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 20px rgb(208, 203, 203);
 }
 
 /* Portfolio Section */
@@ -137,6 +137,12 @@ body {
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s ease;
+    /* 3D effect for portfolio headings */
+    text-shadow:
+        1px 1px 0px #000,
+        2px 2px 0px #000000,
+        3px 3px 0px #f6f4f4,
+        4px 4px 0px #999;
 }
 
 .portfolio h2.visible {
@@ -181,6 +187,14 @@ body {
 
 .portfolio-info h3 {
     margin-bottom: 0.5rem;
+}
+
+.portfolio-info h3 a {
+    color: #fff; /* Ensure links are white */
+}
+
+.portfolio-info h3 a {
+    color: #fff; /* Ensure links are white */
 }
 
 .portfolio-info p {
@@ -301,4 +315,24 @@ footer.visible {
         grid-template-columns: 1fr;
         text-align: center;
     }
+}
+
+.portfolio-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Make the entire item clickable */
+}
+
+.portfolio-image-preview {
+    width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Cover the area, cropping if necessary */
+    display: block;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #333;
+}
+
+.portfolio-item:hover .portfolio-image-preview {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }

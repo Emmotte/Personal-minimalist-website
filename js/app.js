@@ -3,7 +3,7 @@ class PortfolioApp {
     constructor() {
         this.p5Instance = null;
         this.typographyCanvas = null;
-        this.particles = [];
+        this.particles = []; // For p5.js particles
         this.init();
     }
 
@@ -20,16 +20,45 @@ class PortfolioApp {
         this.setupP5Typography();
         this.setupAnimeJS();
         this.setupEventListeners();
+        this.setupCursorParticles(); // Site-wide cursor particles
         this.setupScrollAnimations();
     }
 
     setupP5Typography() {
         console.log('Setting up P5 typography...');
         
-        // Create p5 instance for hero typography
+        // Create p5 instance for hero typography and background particles
         const sketch = (p) => {
             let creativeText = "Emmett Tupper";
             let time = 0;
+            let particles = []; // Local array for p5 background particles
+            const NUM_BACKGROUND_PARTICLES = 100; // Number of background particles
+
+            class Particle {
+                constructor(p) {
+                    this.p = p;
+                    this.x = p.random(p.width);
+                    this.y = p.random(p.height);
+                    this.vx = p.random(-0.5, 0.5);
+                    this.vy = p.random(-0.5, 0.5);
+                    this.alpha = p.random(100, 200); // Brighter particles
+                    this.radius = p.random(1, 3);
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > this.p.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > this.p.height) this.vy *= -1;
+                }
+
+                draw() {
+                    this.p.noStroke();
+                    this.p.fill(255, this.alpha); // White particles
+                    this.p.ellipse(this.x, this.y, this.radius * 2);
+                }
+            }
 
             p.setup = () => {
                 console.log('P5 setup called');
@@ -43,7 +72,6 @@ class PortfolioApp {
                 canvas.style('z-index', '1');
                 canvas.style('pointer-events', 'none');
                 
-                // Use default font to avoid loading issues
                 p.textAlign(p.CENTER, p.CENTER);
                 
                 // Hide HTML h1 once p5 is ready
@@ -51,6 +79,11 @@ class PortfolioApp {
                 if (htmlH1) {
                     htmlH1.style.opacity = '0';
                     console.log('Hidden HTML h1, P5 text is now active');
+                }
+
+                // Initialize background particles
+                for (let i = 0; i < NUM_BACKGROUND_PARTICLES; i++) {
+                    particles.push(new Particle(p));
                 }
             };
 
@@ -61,12 +94,47 @@ class PortfolioApp {
                 // Draw animated typography
                 this.drawAnimatedText(p, creativeText, time);
                 
-                // Update and draw particles
-                this.updateParticles(p, time);
-                
-                // Mouse interaction
-                this.createMouseParticles(p, p.mouseX, p.mouseY, p.mouseIsPressed);
+                // Update and draw background particles
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
 
+                    // Connect particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let d = p.dist(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+                        if (d < 100) { // Connect if within 100 pixels
+                            p.stroke(255, p.map(d, 0, 100, 200, 0)); // White lines, fading with distance (increased alpha)
+                            p.strokeWeight(0.5);
+                            p.line(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+                        }
+                    }
+                }
+
+                // Mouse interaction for p5 particles (splatter effect)
+                if (p.mouseIsPressed) {
+                    const numSplatterParticles = p.floor(p.random(5, 10));
+                    for (let i = 0; i < numSplatterParticles; i++) {
+                        const size = p.random(3, 8);
+                        const angle = p.random(p.TWO_PI);
+                        const speed = p.random(1, 5);
+
+                        particles.push({
+                            x: p.mouseX,
+                            y: p.mouseY,
+                            vx: p.cos(angle) * speed,
+                            vy: p.sin(angle) * speed,
+                            size: size,
+                            life: 1 // Life from 1 to 0
+                        });
+                    }
+                }
+                // Remove dead particles from the p5 sketch's local array
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    particles[i].life -= 0.01;
+                    if (particles[i].life <= 0) {
+                        particles.splice(i, 1);
+                    }
+                }
             };
 
             p.windowResized = () => {
@@ -108,11 +176,10 @@ class PortfolioApp {
             p.translate(charX, y + waveOffset);
             p.rotate(rotation);
             
-            // Enhanced color animation
-            const alpha = 255;
-            p.fill(255, alpha);
+            // Ensure solid white color
+            p.fill(255); 
             p.strokeWeight(1);
-            p.stroke(255, alpha * 0.3);
+            p.stroke(255, 100); // Slightly transparent stroke
             p.text(char, 0, 0);
             p.pop();
         }
@@ -126,43 +193,6 @@ class PortfolioApp {
         p.pop();
     }
 
-    updateParticles(p, time) {
-        // Update and draw particles
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-            const particle = this.particles[i];
-            
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            particle.life -= 0.01;
-            
-            if (particle.life <= 0) {
-                this.particles.splice(i, 1);
-                continue;
-            }
-            
-            p.push();
-            p.fill(255, particle.life * 100);
-            p.noStroke();
-            p.circle(particle.x, particle.y, particle.size);
-            p.pop();
-        }
-    }
-
-    createMouseParticles(p, mx, my, isPressed) {
-        // Create particles at mouse position
-        let particleCount = isPressed ? 10 : 1;
-        for (let i = 0; i < particleCount; i++) {
-            this.particles.push({
-                x: mx,
-                y: my,
-                vx: p.random(-3, 3),
-                vy: p.random(-3, 3),
-                size: p.random(1, 3),
-                life: 1
-            });
-        }
-    }
-
     setupAnimeJS() {
         // CTA button scroll to portfolio with Anime.js
         const ctaButton = document.querySelector('.cta-button');
@@ -170,7 +200,7 @@ class PortfolioApp {
             ctaButton.addEventListener('click', () => {
                 anime({
                     targets: 'html, body',
-                    scrollTop: document.getElementById('portfolio').offsetTop,
+                    scrollTop: document.getElementById('photography').offsetTop, // Changed from 'portfolio' to 'photography'
                     duration: 1500,
                     easing: 'easeInOutQuad'
                 });
@@ -265,6 +295,48 @@ class PortfolioApp {
                     easing: 'easeOutQuad'
                 });
             });
+        });
+    }
+
+    setupCursorParticles() {
+        document.addEventListener('mousemove', (e) => {
+            const numSplatterParticles = anime.random(5, 10); // Create 5 to 10 particles
+            for (let i = 0; i < numSplatterParticles; i++) {
+                const particle = document.createElement('div');
+                const size = anime.random(3, 8); // Random size for splatter
+                const startX = e.clientX - size / 2; // Center particle
+                const startY = e.clientY - size / 2; // Center particle
+
+                particle.style.cssText = `
+                    position: fixed;
+                    left: ${startX}px;
+                    top: ${startY}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: white;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    opacity: 0; /* Start invisible */
+                `;
+                document.body.appendChild(particle);
+
+                const angle = Math.random() * Math.PI * 2; // Random angle for splatter direction
+                const distance = anime.random(20, 60); // Random distance to splatter
+                const endX = startX + Math.cos(angle) * distance;
+                const endY = startY + Math.sin(angle) * distance;
+
+                anime({
+                    targets: particle,
+                    translateX: [0, endX - startX],
+                    translateY: [0, endY - startY],
+                    scale: [0, 1, 0],
+                    opacity: [0, 1, 0],
+                    duration: anime.random(500, 1200),
+                    easing: 'easeOutCirc',
+                    complete: () => particle.remove()
+                });
+            }
         });
     }
 
@@ -420,34 +492,8 @@ class PortfolioApp {
         animateElements.forEach(el => {
             observer.observe(el);
         });
-
-        // Floating particles effect
-        setInterval(() => this.createParticle(), 2000);
     }
 
-    createParticle() {
-        const particle = document.createElement('div');
-        particle.style.cssText = `
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        document.body.appendChild(particle);
-
-        anime({
-            targets: particle,
-            translateY: [window.innerHeight + 100, -100],
-            translateX: () => anime.random(-100, 100),
-            opacity: [0, 0.8, 0],
-            duration: anime.random(3000, 6000),
-            easing: 'linear',
-            complete: () => particle.remove()
-        });
-    }
 }
 
 // Initialize the app
