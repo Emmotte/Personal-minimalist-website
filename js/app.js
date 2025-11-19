@@ -70,7 +70,6 @@ class PortfolioApp {
                 canvas.style('top', '0');
                 canvas.style('left', '0');
                 canvas.style('z-index', '1');
-                canvas.style('pointer-events', 'none');
                 
                 p.textAlign(p.CENTER, p.CENTER);
                 
@@ -109,31 +108,23 @@ class PortfolioApp {
                         }
                     }
                 }
+            };
 
-                // Mouse interaction for p5 particles (splatter effect)
-                if (p.mouseIsPressed) {
-                    const numSplatterParticles = p.floor(p.random(5, 10));
-                    for (let i = 0; i < numSplatterParticles; i++) {
-                        const size = p.random(3, 8);
-                        const angle = p.random(p.TWO_PI);
-                        const speed = p.random(1, 5);
+            p.mouseClicked = () => {
+                const numSplatterParticles = p.floor(p.random(5, 10));
+                for (let i = 0; i < numSplatterParticles; i++) {
+                    const size = p.random(1, 6);
+                    const angle = p.random(p.TWO_PI);
+                    const speed = p.random(3, 8);
 
-                        particles.push({
-                            x: p.mouseX,
-                            y: p.mouseY,
-                            vx: p.cos(angle) * speed,
-                            vy: p.sin(angle) * speed,
-                            size: size,
-                            life: 1 // Life from 1 to 0
-                        });
-                    }
-                }
-                // Remove dead particles from the p5 sketch's local array
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    particles[i].life -= 0.01;
-                    if (particles[i].life <= 0) {
-                        particles.splice(i, 1);
-                    }
+                    particles.push({
+                        x: p.mouseX,
+                        y: p.mouseY,
+                        vx: p.cos(angle) * speed,
+                        vy: p.sin(angle) * speed,
+                        size: size,
+                        life: 2 // Life from 1 to 0
+                    });
                 }
             };
 
@@ -146,7 +137,7 @@ class PortfolioApp {
         // Create p5 instance
         this.p5Instance = new p5(sketch);
         
-        // Fallback: if p5 doesn't work after 3 seconds, show HTML text
+        // Fallback: if p5 doesn't work after 1 second, show HTML text
         setTimeout(() => {
             const canvas = document.getElementById('typography-canvas');
             const htmlH1 = document.querySelector('.hero h1');
@@ -154,7 +145,7 @@ class PortfolioApp {
                 htmlH1.style.opacity = '1';
                 console.log('Fallback: Showing HTML text');
             }
-        }, 3000);
+        }, 1000);
     }
 
     drawAnimatedText(p, text, time) {
@@ -201,7 +192,7 @@ class PortfolioApp {
                 anime({
                     targets: 'html, body',
                     scrollTop: document.getElementById('photography').offsetTop, // Changed from 'portfolio' to 'photography'
-                    duration: 1500,
+                    duration: 1000,
                     easing: 'easeInOutQuad'
                 });
             });
@@ -215,23 +206,23 @@ class PortfolioApp {
             targets: '.hero-subtitle',
             translateY: [30, 0],
             opacity: [0, 1],
-            duration: 1500,
-            delay: 1000
+            duration: 1000,
+            delay: 500
         })
         .add({
             targets: '.cta-button',
             scale: [0.8, 1],
             opacity: [0, 1],
             rotateZ: [-0, 0],
-            duration: 1200,
-            delay: 200
-        }, '-=800');
+            duration: 800,
+            delay: 100
+        }, '-=400');
 
         // CTA button continuous animation - reduced zoom
         anime({
             targets: '.cta-button',
             scale: [1, 1., 1], /* Reduced from 1.05 to 1.02 */
-            duration: 2000,
+            duration: 1500,
             loop: true,
             easing: 'easeInOutSine',
             direction: 'alternate'
@@ -250,10 +241,20 @@ class PortfolioApp {
                     targets: '.hero-subtitle',
                     translateX: x * 0.5,
                     translateY: y * 0.5,
-                    duration: 1000,
+                    duration: 500,
                     easing: 'easeOutQuad'
                 });
             }
+        });
+
+        // Portfolio header click event
+        document.querySelectorAll('.portfolio-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const link = this.querySelector('.hidden-link');
+                if (link) {
+                    window.location.href = link.href;
+                }
+            });
         });
 
         // Portfolio item hover effects
@@ -261,18 +262,18 @@ class PortfolioApp {
             item.addEventListener('mouseenter', function() {
                 anime({
                     targets: this,
-                    translateY: -10,
+                    translateY: -5,
                     rotateY: 0,
-                    scale: 1.02,
-                    duration: 600,
+                    scale: 1.01,
+                    duration: 300,
                     easing: 'easeOutQuad'
                 });
                 
                 anime({
                     targets: this.querySelector('.portfolio-image img'),
-                    scale: 1.1,
-                    translateZ: 20,
-                    duration: 600,
+                    scale: 1.05,
+                    translateZ: 10,
+                    duration: 300,
                     easing: 'easeOutQuad'
                 });
             });
@@ -283,7 +284,7 @@ class PortfolioApp {
                     translateY: 0,
                     rotateY: 0,
                     scale: 1,
-                    duration: 600,
+                    duration: 300,
                     easing: 'easeOutQuad'
                 });
                 
@@ -291,7 +292,7 @@ class PortfolioApp {
                     targets: this.querySelector('.portfolio-image img'),
                     scale: 1,
                     translateZ: 0,
-                    duration: 600,
+                    duration: 300,
                     easing: 'easeOutQuad'
                 });
             });
@@ -300,10 +301,10 @@ class PortfolioApp {
 
     setupCursorParticles() {
         document.addEventListener('mousemove', (e) => {
-            const numSplatterParticles = anime.random(5, 10); // Create 5 to 10 particles
+            const numSplatterParticles = anime.random(3, 7); // Create 3 to 7 particles
             for (let i = 0; i < numSplatterParticles; i++) {
                 const particle = document.createElement('div');
-                const size = anime.random(3, 8); // Random size for splatter
+                const size = anime.random(2, 6); // Random size for splatter
                 const startX = e.clientX - size / 2; // Center particle
                 const startY = e.clientY - size / 2; // Center particle
 
@@ -322,7 +323,7 @@ class PortfolioApp {
                 document.body.appendChild(particle);
 
                 const angle = Math.random() * Math.PI * 2; // Random angle for splatter direction
-                const distance = anime.random(20, 60); // Random distance to splatter
+                const distance = anime.random(10, 40); // Random distance to splatter
                 const endX = startX + Math.cos(angle) * distance;
                 const endY = startY + Math.sin(angle) * distance;
 
@@ -332,7 +333,7 @@ class PortfolioApp {
                     translateY: [0, endY - startY],
                     scale: [0, 1, 0],
                     opacity: [0, 1, 0],
-                    duration: anime.random(500, 1200),
+                    duration: anime.random(300, 800),
                     easing: 'easeOutCirc',
                     complete: () => particle.remove()
                 });
@@ -426,21 +427,21 @@ class PortfolioApp {
                     if (target.classList.contains('portfolio-item')) {
                         anime({
                             targets: target,
-                            translateY: [50, 0],
-                            rotateX: [15, 0],
+                            translateY: [30, 0],
+                            rotateX: [10, 0],
                             opacity: [0, 1],
-                            scale: [0.9, 1],
-                            duration: 1000,
+                            scale: [0.95, 1],
+                            duration: 500,
                             easing: 'easeOutQuad',
-                            delay: anime.stagger(100, {grid: [14, 5], from: 'center'})
+                            delay: anime.stagger(50, {grid: [14, 5], from: 'center'})
                         });
                     } else if (target.tagName === 'H2') {
                         anime({
                             targets: target,
-                            translateY: [30, 0],
-                            rotateX: [10, 0],
+                            translateY: [20, 0],
+                            rotateX: [5, 0],
                             opacity: [0, 1],
-                            duration: 1200,
+                            duration: 800,
                             easing: 'easeOutExpo'
                         });
                     } else if (target.classList.contains('about-content')) {
@@ -449,32 +450,32 @@ class PortfolioApp {
                         })
                         .add({
                             targets: '.about-text',
-                            translateX: [-100, 0],
+                            translateX: [-50, 0],
                             opacity: [0, 1],
-                            duration: 1500
+                            duration: 1000
                         })
                         .add({
                             targets: '.about-image',
-                            translateX: [100, 0],
+                            translateX: [50, 0],
                             opacity: [0, 1],
-                            rotate: [360, 0],
-                            duration: 1500
-                        }, '-=1000');
+                            rotate: [180, 0],
+                            duration: 1000
+                        }, '-=500');
                     } else if (target.classList.contains('contact-content')) {
                         anime({
                             targets: '.contact-content > *',
-                            translateY: [30, 0],
+                            translateY: [20, 0],
                             opacity: [0, 1],
-                            duration: 1000,
-                            delay: anime.stagger(200),
+                            duration: 500,
+                            delay: anime.stagger(100),
                             easing: 'easeOutQuad'
                         });
                     } else if (target.tagName === 'FOOTER') {
                         anime({
                             targets: target,
-                            translateY: [50, 0],
+                            translateY: [30, 0],
                             opacity: [0, 1],
-                            duration: 1000,
+                            duration: 500,
                             easing: 'easeOutQuad'
                         });
                     }

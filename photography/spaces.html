@@ -1,33 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photography - Spaces</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <style>
+        body {
+            background-color: #000;
+        }
+        .image-row {
+            display: flex;
+            flex-wrap: nowrap; /* Ensure images stay in a single row */
+            gap: 10px; /* Adjust as needed for spacing between images */
+            justify-content: center; /* Center images in the row */
+            padding: 20px;
+        }
+        .image-row img {
+            flex: 1; /* Allow images to grow and shrink proportionally */
+            height: auto;
+            object-fit: cover; /* Cover the area, cropping if necessary */
+            min-width: 0; /* Allow images to shrink below their content size */
+        }
+    </style>
 </head>
 <body>
-    <section class="portfolio">
-        <div class="container">
-            <h2>Spaces</h2>
-            <div class="portfolio-grid">
-                <div class="portfolio-item">
-                    <div class="portfolio-info">
-                        <h3>Urban Landscapes</h3>
-                        <p>City photography exploring modern architecture</p>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-info">
-                        <h3>Nature Studies</h3>
-                        <p>Natural beauty in monochrome</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script src="../js/app.js"></script>
+    <nav class="nav">
+    <div class="container">
+        <a href="/index.html" class="nav-logo">Emmett Tupper</a>
+        <ul class="nav-links">
+            <li><a href="/photography/Photography.html">Photography</a></li>
+            <li><a href="/video/Video.html">Video</a></li>
+            <li><a href="/computer-science/computer-science.html">Computer Science</a></li>
+            <li><a href="/index.html#about">About</a></li>
+            <li><a href="/index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+    <div class="container">
+        <a href="Photography.html" class="back-button">Back to Photography</a>
+        <h1>Spaces</h1>
+    </div>
+    <div class="image-row">
+        <img src="IMG_6367.jpg" alt="Spaces Photo 1">
+        <img src="IMG_6379.jpg" alt="Spaces Photo 2">
+        <img src="IMG_6406.jpg" alt="Spaces Photo 3">
+        <img src="IMG_6407.jpg" alt="Spaces Photo 4">
+    </div>
 </body>
 </html>
